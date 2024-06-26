@@ -1,0 +1,30 @@
+name: Deploy To EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH로 EC2에 접속하기
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          ENV: ${{ secrets.ENV }}
+        with:
+          host: ${{ secrets.EC2_HOST }} # EC2의 주소
+          username: ${{ secrets.EC2_USERNAME }} # EC2 접속 username
+          key: ${{ secrets.EC2_PRIVATE_KEY }} # EC2의 Key 파일의 내부 텍스트
+          envs: ENV
+          script_stop: true # 아래 script 중 실패하는 명령이 하나라도 있으면 실패로 처리
+          script: |
+            cd /home/ubuntu/instagram_server_cicd
+            rm -rf .env
+            git pull origin main
+            echo "$ENV" > .env
+            yarn
+            yarn run build
+            pm2 kill
+            pm2 start dist/main.js --name "backend-server"

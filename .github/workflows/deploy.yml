@@ -24,7 +24,7 @@ jobs:
             rm -rf .env
             git pull origin main
             echo "$ENV" > .env
-            yarn
-            yarn run build
+            npm install
+            npm run build
             pm2 kill
             pm2 start dist/main.js --name "backend-server"

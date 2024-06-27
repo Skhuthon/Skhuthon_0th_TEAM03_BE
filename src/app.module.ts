@@ -15,6 +15,11 @@ import {
 } from './common/const/env-keys.const';
 import { AuthModule } from './auth/auth.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { ReviewsModel } from './reviews/entity/reviews.entity';
+import { StoresModule } from './stores/stores.module';
+import { ThemesModule } from './stores/themes/themes.module';
+import { ThemesModel } from './stores/themes/entity/themes.entity';
+import { StoresModel } from './stores/entity/stores.entity';
 
 @Module({
   imports: [
@@ -31,7 +36,7 @@ import { ReviewsModule } from './reviews/reviews.module';
         username: configService.get<string>(ENV_DB_USERNAME_KEY),
         password: configService.get<string>(ENV_DB_PASSWORD_KEY),
         database: configService.get<string>(ENV_DB_DATABASE_KEY),
-        entities: [UsersModel],
+        entities: [UsersModel, ReviewsModel, StoresModel, ThemesModel],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -40,6 +45,8 @@ import { ReviewsModule } from './reviews/reviews.module';
     UsersModule,
     AuthModule,
     ReviewsModule,
+    StoresModule,
+    ThemesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

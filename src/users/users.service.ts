@@ -9,7 +9,9 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersModel)
     private readonly usersRepository: Repository<UsersModel>,
-  ) {}
+  ) {
+  }
+
   async createUser(dto: CreateUserDto) {
     const nicknameExist: boolean = await this.usersRepository.exists({
       where: {
@@ -37,6 +39,7 @@ export class UsersService {
 
     return newUser;
   }
+
   async getUserByEmail(email: string) {
     const user = await this.usersRepository.findOne({
       where: {
@@ -47,6 +50,5 @@ export class UsersService {
       throw new BadRequestException('존재하지 않는 이메일입니다.');
     }
     return user;
-
-
+  }
 }

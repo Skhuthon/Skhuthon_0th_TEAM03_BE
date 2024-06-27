@@ -6,7 +6,8 @@ import {
   UseGuards,
   Get,
   Res,
-  Header, Query,
+  Header,
+  Query,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -18,7 +19,14 @@ import {
   ENV_KAKAO_CLIENT_ID_KEY,
   ENV_KAKAO_REDIRECT_URL_KEY,
 } from '../common/const/env-keys.const';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiTags,
+  ApiResponse,
+  ApiBody,
+  ApiHeader,
+  ApiQuery,
+} from '@nestjs/swagger';
 
 @ApiTags('인증 관련 API')
 @Controller('auth')
@@ -28,7 +36,11 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @ApiOperation({ summary: '카카오 로그인' })
+  @ApiOperation({ summary: '카카오 로그인 요청' })
+  @ApiResponse({
+    status: 302,
+    description: '카카오 로그인 페이지로 리다이렉트',
+  })
   @Get('kakao-login-page')
   @Header('Content-Type', 'text/html')
   async kakaoRedirect(@Res() res: Response): Promise<void> {
@@ -41,6 +53,8 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: '카카오 로그인 리다이렉트' })
+  @ApiResponse({ status: 200, description: '카카오 사용자 정보 조회 성공' })
+  @ApiQuery({ name: 'code', required: true, description: '카카오 인증 코드' })
   @Get('kakao/redirect')
   async getKakaoInfo(@Query('code') code: string) {
     const client_id = this.configService.get<string>(ENV_KAKAO_CLIENT_ID_KEY);
@@ -50,6 +64,17 @@ export class AuthController {
     await this.authService.kakaoLogin(client_id, redirect_uri, code);
   }
 
+  @ApiOperation({ summary: '엑세스 토큰 갱신' })
+  @ApiResponse({
+    status: 200,
+    description: '엑세스 토큰 갱신 성공',
+    schema: { example: { accessToken: 'newAccessToken' } },
+  })
+  @ApiHeader({
+    name: 'authorization',
+    required: true,
+    description: 'Bearer 리프레시 토큰',
+  })
   @Post('token/access')
   @UseGuards(RefreshTokenGuard)
   postTokenAccess(@Headers('authorization') rawToken: string) {
@@ -63,6 +88,17 @@ export class AuthController {
     };
   }
 
+  @ApiOperation({ summary: '리프레시 토큰 갱신' })
+  @ApiResponse({
+    status: 200,
+    description: '리프레시 토큰 갱신 성공',
+    schema: { example: { refreshToken: 'newRefreshToken' } },
+  })
+  @ApiHeader({
+    name: 'authorization',
+    required: true,
+    description: 'Bearer 리프레시 토큰',
+  })
   @Post('token/refresh')
   @UseGuards(RefreshTokenGuard)
   postTokenRefresh(@Headers('authorization') rawToken: string) {
@@ -76,7 +112,19 @@ export class AuthController {
     };
   }
 
-  // 로그인
+  @ApiOperation({ summary: '이메일 로그인' })
+  @ApiResponse({
+    status: 200,
+    description: '로그인 성공',
+    schema: {
+      example: { accessToken: 'accessToken', refreshToken: 'refreshToken' },
+    },
+  })
+  @ApiHeader({
+    name: 'authorization',
+    required: true,
+    description: 'Basic 인증 토큰',
+  })
   @Post('login/email')
   @UseGuards(BasicTokenGuard)
   postLoginEmail(@Headers('authorization') rawToken: string) {
@@ -86,7 +134,13 @@ export class AuthController {
     return this.authService.loginWithEmail(credentials);
   }
 
-  // 회원가입
+  @ApiOperation({ summary: '이메일 회원가입' })
+  @ApiResponse({
+    status: 201,
+    description: '회원가입 성공',
+    schema: { example: { message: 'User registered successfully' } },
+  })
+  @ApiBody({ type: RegisterUserDto })
   @Post('register/email')
   postRegisterEmail(@Body() body: RegisterUserDto) {
     return this.authService.registerWithEmail(body);

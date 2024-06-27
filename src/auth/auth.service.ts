@@ -100,6 +100,7 @@ export class AuthService {
       // 사용자 정보가 없으면 회원가입
       if (!user) {
         user = await this.registerUser(email);
+        return this.loginUser(user);
       }
       // 로그인
       return this.loginUser(user);

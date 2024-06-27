@@ -9,12 +9,15 @@ import {
 import { UsersModel } from '../users/entity/users.entity';
 import { RegisterUserDto } from './dto/register-user.dto';
 import bcrypt from 'bcrypt';
+import { firstValueFrom } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
+    private readonly http: HttpService,
   ) {}
   extractTokenFromHeader(header: string, isBearer: boolean) {
     // 'Basic {token}' -> ['Basic', '{token}']
@@ -132,5 +135,31 @@ export class AuthService {
     });
 
     return this.loginUser(newUser);
+  }
+  async kakaoLogin(client_id: string, redirect_uri: string, code: string) {
+    const config = {
+      grant_type: 'authorization_code',
+      client_id,
+      redirect_uri,
+      code,
+    };
+    const params = new URLSearchParams(config).toString();
+    const tokenHeaders = {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    };
+    const tokenUrl = `https://kauth.kakao.com/oauth/token?${params}`;
+
+    const res = await firstValueFrom(
+      this.http.post(tokenUrl, '', { headers: tokenHeaders }),
+    );
+    // 받아온 토큰으로 사용자 정보를 가져온다.
+    const userInfoUrl = 'https://kapi.kakao.com/v2/user/me';
+    const userInfoHeaders = {
+      Authorization: `Bearer ${res.data.access_token}`,
+    };
+    const { data } = await firstValueFrom(
+      this.http.get(userInfoUrl, { headers: userInfoHeaders }),
+    );
+    console.log(data);
   }
 }

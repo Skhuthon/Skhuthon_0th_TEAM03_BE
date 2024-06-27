@@ -18,7 +18,7 @@ export class UsersService {
       },
     });
     if (emailExist) {
-      throw new BadRequestException('이미 가입한 이메일입니다.');
+      throw new BadRequestException('이미 존재하는 이메일입니다.');
     }
 
     const userObject = this.usersRepository.create({

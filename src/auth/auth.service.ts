@@ -6,6 +6,7 @@ import { ENV_JWT_SECRET_KEY } from '../common/const/env-keys.const';
 import { UsersModel } from '../users/entity/users.entity';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -14,17 +15,21 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly http: HttpService,
   ) {}
+
+  private readonly BEARER_PREFIX = 'Bearer';
+  private readonly JWT_EXPIRATION = '365d';
+  private readonly KAKAO_TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
+  private readonly KAKAO_USER_INFO_URL = 'https://kapi.kakao.com/v2/user/me';
+
   extractTokenFromHeader(header: string) {
     const splitToken = header.split(' ');
 
-    const prefix = 'Bearer';
-
-    if (splitToken.length !== 2 || splitToken[0] !== prefix) {
+    if (splitToken.length !== 2 || splitToken[0] !== this.BEARER_PREFIX) {
       throw new UnauthorizedException('토큰이 올바르지 않습니다.');
     }
-    const token = splitToken[1];
-    return token;
+    return splitToken[1];
   }
+
   verifyToken(token: string) {
     try {
       return this.jwtService.verify(token, {
@@ -34,6 +39,7 @@ export class AuthService {
       throw new UnauthorizedException('토큰이 만료되었거나 잘못된 토큰입니다.');
     }
   }
+
   signToken(user: Pick<UsersModel, 'email' | 'id'>) {
     const payload = {
       email: user.email,
@@ -43,17 +49,19 @@ export class AuthService {
 
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>(ENV_JWT_SECRET_KEY),
-      // 1 year
-      expiresIn: '365d',
+      expiresIn: this.JWT_EXPIRATION,
     });
+  }
+
+  async registerUser(email: string) {
+    return this.usersService.createUser({ email });
   }
 
   loginUser(user: Pick<UsersModel, 'email' | 'id'>) {
     const accessToken = this.signToken(user);
-    return {
-      accessToken,
-    };
+    return { accessToken };
   }
+
   async kakaoLogin(client_id: string, redirect_uri: string, code: string) {
     const config = {
       grant_type: 'authorization_code',
@@ -65,25 +73,39 @@ export class AuthService {
     const tokenHeaders = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     };
-    const tokenUrl = `https://kauth.kakao.com/oauth/token`;
 
     try {
       // 토큰을 받아온다.
-      const res = await firstValueFrom(
-        this.http.post(tokenUrl, params, { headers: tokenHeaders }),
+      const tokenResponse = await firstValueFrom(
+        this.http.post(this.KAKAO_TOKEN_URL, params, { headers: tokenHeaders }),
       );
-      console.log(res.data);
+      const { access_token } = tokenResponse.data;
+
       // 받아온 토큰으로 사용자 정보를 가져온다.
-      const userInfoUrl = 'https://kapi.kakao.com/v2/user/me';
       const userInfoHeaders = {
-        Authorization: `Bearer ${res.data.access_token}`,
+        Authorization: `Bearer ${access_token}`,
       };
       const { data } = await firstValueFrom(
-        this.http.get(userInfoUrl, { headers: userInfoHeaders }),
+        this.http.get(this.KAKAO_USER_INFO_URL, { headers: userInfoHeaders }),
       );
-      console.log(data.kakao_account.email);
+
+      const email = data.kakao_account.email;
+      if (!email) {
+        throw new UnauthorizedException('이메일 정보를 가져올 수 없습니다.');
+      }
+
+      // 사용자 정보를 이용해서 로그인 처리
+      let user = await this.usersService.findUserByEmail(email);
+
+      // 사용자 정보가 없으면 회원가입 처리
+      if (!user) {
+        user = await this.registerUser(email);
+      }
+
+      return this.loginUser(user);
     } catch (e) {
       console.error('Error during Kakao login:', e);
+      throw new UnauthorizedException('카카오 로그인 중 오류가 발생했습니다.');
     }
   }
 }

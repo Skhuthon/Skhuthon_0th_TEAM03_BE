@@ -149,18 +149,23 @@ export class AuthService {
     };
     const tokenUrl = `https://kauth.kakao.com/oauth/token?${params}`;
 
-    const res = await firstValueFrom(
-      this.http.post(tokenUrl, '', { headers: tokenHeaders }),
-    );
-    console.log(res.data);
-    // 받아온 토큰으로 사용자 정보를 가져온다.
-    const userInfoUrl = 'https://kapi.kakao.com/v2/user/me';
-    const userInfoHeaders = {
-      Authorization: `Bearer ${res.data.access_token}`,
-    };
-    const { data } = await firstValueFrom(
-      this.http.get(userInfoUrl, { headers: userInfoHeaders }),
-    );
-    console.log(data);
+    try {
+      // 토큰을 받아온다.
+      const res = await firstValueFrom(
+        this.http.post(tokenUrl, params, { headers: tokenHeaders }),
+      );
+      console.log(res.data);
+      // 받아온 토큰으로 사용자 정보를 가져온다.
+      const userInfoUrl = 'https://kapi.kakao.com/v2/user/me';
+      const userInfoHeaders = {
+        Authorization: `Bearer ${res.data.access_token}`,
+      };
+      const { data } = await firstValueFrom(
+        this.http.get(userInfoUrl, { headers: userInfoHeaders }),
+      );
+      console.log(data);
+    } catch (e) {
+      console.error('Error during Kakao login:', e);
+    }
   }
 }

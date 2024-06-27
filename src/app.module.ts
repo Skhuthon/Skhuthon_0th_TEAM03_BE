@@ -14,6 +14,7 @@ import {
   ENV_DB_USERNAME_KEY,
 } from './common/const/env-keys.const';
 import { AuthModule } from './auth/auth.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AuthModule } from './auth/auth.module';
     CommonModule,
     UsersModule,
     AuthModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -152,6 +152,7 @@ export class AuthService {
     const res = await firstValueFrom(
       this.http.post(tokenUrl, '', { headers: tokenHeaders }),
     );
+    console.log(res.data);
     // 받아온 토큰으로 사용자 정보를 가져온다.
     const userInfoUrl = 'https://kapi.kakao.com/v2/user/me';
     const userInfoHeaders = {

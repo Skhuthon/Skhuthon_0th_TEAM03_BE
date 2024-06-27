@@ -4,10 +4,7 @@ import { BaseModel } from '../../common/entity/base.entity';
 @Entity('users')
 export class UsersModel extends BaseModel {
   @Column()
-  name: string;
-
-  @Column()
-  age: number;
+  nickname: string;
 
   @Column()
   email: string;

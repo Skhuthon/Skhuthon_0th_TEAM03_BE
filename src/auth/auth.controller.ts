@@ -42,7 +42,7 @@ export class AuthController {
 
   @ApiOperation({ summary: '카카오 로그인 리다이렉트' })
   @Get('kakao/redirect')
-  async getKakaoInfo(@Query() code: string) {
+  async getKakaoInfo(@Query('code') code: string) {
     const client_id = this.configService.get<string>(ENV_KAKAO_CLIENT_ID_KEY);
     const redirect_uri = this.configService.get<string>(
       ENV_KAKAO_REDIRECT_URL_KEY,

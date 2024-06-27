@@ -147,7 +147,7 @@ export class AuthService {
     const tokenHeaders = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     };
-    const tokenUrl = `https://kauth.kakao.com/oauth/token?${params}`;
+    const tokenUrl = `https://kauth.kakao.com/oauth/token`;
 
     try {
       // 토큰을 받아온다.

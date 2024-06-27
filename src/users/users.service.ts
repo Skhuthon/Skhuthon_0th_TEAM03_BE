@@ -12,15 +12,6 @@ export class UsersService {
   ) {}
 
   async createUser(dto: CreateUserDto) {
-    const nicknameExist: boolean = await this.usersRepository.exists({
-      where: {
-        nickname: dto.nickname,
-      },
-    });
-
-    if (nicknameExist) {
-      throw new BadRequestException('이미 존재하는 닉네임입니다.');
-    }
     const emailExist = await this.usersRepository.exists({
       where: {
         email: dto.email,
@@ -32,14 +23,13 @@ export class UsersService {
 
     const userObject = this.usersRepository.create({
       email: dto.email,
-      nickname: dto.nickname,
     });
     const newUser = await this.usersRepository.save(userObject);
 
     return newUser;
   }
 
-  async getUserByEmail(email: string) {
+  async findUserByEmail(email: string) {
     const user = await this.usersRepository.findOne({
       where: {
         email,

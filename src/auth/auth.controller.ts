@@ -1,32 +1,12 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Headers,
-  UseGuards,
-  Get,
-  Res,
-  Header,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Res, Header, Query } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { BasicTokenGuard } from './guard/basic-token.guard';
-import { RefreshTokenGuard } from './guard/bearer-token.guard';
-import { RegisterUserDto } from './dto/register-user.dto';
 import { ConfigService } from '@nestjs/config';
 import {
   ENV_KAKAO_CLIENT_ID_KEY,
   ENV_KAKAO_REDIRECT_URL_KEY,
 } from '../common/const/env-keys.const';
-import {
-  ApiOperation,
-  ApiTags,
-  ApiResponse,
-  ApiBody,
-  ApiHeader,
-  ApiQuery,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('인증 관련 API')
 @Controller('auth')
@@ -62,87 +42,5 @@ export class AuthController {
       ENV_KAKAO_REDIRECT_URL_KEY,
     );
     await this.authService.kakaoLogin(client_id, redirect_uri, code);
-  }
-
-  @ApiOperation({ summary: '엑세스 토큰 갱신' })
-  @ApiResponse({
-    status: 200,
-    description: '엑세스 토큰 갱신 성공',
-    schema: { example: { accessToken: 'newAccessToken' } },
-  })
-  @ApiHeader({
-    name: 'authorization',
-    required: true,
-    description: 'Bearer 리프레시 토큰',
-  })
-  @Post('token/access')
-  @UseGuards(RefreshTokenGuard)
-  postTokenAccess(@Headers('authorization') rawToken: string) {
-    const token = this.authService.extractTokenFromHeader(rawToken, true);
-    const newToken = this.authService.rotateToken(token, false);
-    /**
-     * {accessToken: {token}}
-     */
-    return {
-      accessToken: newToken,
-    };
-  }
-
-  @ApiOperation({ summary: '리프레시 토큰 갱신' })
-  @ApiResponse({
-    status: 200,
-    description: '리프레시 토큰 갱신 성공',
-    schema: { example: { refreshToken: 'newRefreshToken' } },
-  })
-  @ApiHeader({
-    name: 'authorization',
-    required: true,
-    description: 'Bearer 리프레시 토큰',
-  })
-  @Post('token/refresh')
-  @UseGuards(RefreshTokenGuard)
-  postTokenRefresh(@Headers('authorization') rawToken: string) {
-    const token = this.authService.extractTokenFromHeader(rawToken, true);
-    const newToken = this.authService.rotateToken(token, true);
-    /**
-     * {refreshToken: {token}}
-     */
-    return {
-      refreshToken: newToken,
-    };
-  }
-
-  @ApiOperation({ summary: '이메일 로그인' })
-  @ApiResponse({
-    status: 200,
-    description: '로그인 성공',
-    schema: {
-      example: { accessToken: 'accessToken', refreshToken: 'refreshToken' },
-    },
-  })
-  @ApiHeader({
-    name: 'authorization',
-    required: true,
-    description: 'Basic 인증 토큰',
-  })
-  @Post('login/email')
-  @UseGuards(BasicTokenGuard)
-  postLoginEmail(@Headers('authorization') rawToken: string) {
-    const token = this.authService.extractTokenFromHeader(rawToken, false);
-
-    const credentials = this.authService.decodeBasicToken(token);
-    return this.authService.loginWithEmail(credentials);
-  }
-
-  @ApiOperation({ summary: '이메일 회원가입' })
-  @ApiResponse({
-    status: 201,
-    description: '회원가입 성공',
-    schema: { example: { message: 'User registered successfully' } },
-  })
-  @ApiBody({ type: RegisterUserDto })
-  @Post('register/email')
-  postRegisterEmail(@Body() body: RegisterUserDto) {
-    return this.authService.registerWithEmail(body);
   }
 }

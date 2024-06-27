@@ -39,4 +39,17 @@ export class UsersModel extends BaseModel {
     message: lengthValidationMessage,
   })
   nickname: string;
+  @Column()
+  @ApiProperty({
+    example: '1234',
+    description: '사용자 비밀번호',
+    required: true,
+  })
+  @IsString({
+    message: stringValidationMessage,
+  })
+  @Length(6, 20, {
+    message: lengthValidationMessage,
+  })
+  password: string;
 }

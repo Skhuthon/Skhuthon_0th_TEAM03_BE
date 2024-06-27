@@ -37,4 +37,16 @@ export class UsersService {
 
     return newUser;
   }
+  async getUserByEmail(email: string) {
+    const user = await this.usersRepository.findOne({
+      where: {
+        email,
+      },
+    });
+    if (!user) {
+      throw new BadRequestException('존재하지 않는 이메일입니다.');
+    }
+    return user;
+
+
 }

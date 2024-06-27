@@ -22,9 +22,8 @@ jobs:
           script: |
             cd /home/ubuntu/Skhuthon_0th_TEAM03_BE
             rm -rf .env
-            git stash
+            git reset --hard HEAD
             git pull origin main
-            git stash pop || true
             echo "$ENV" > .env
             npm install
             npm run build

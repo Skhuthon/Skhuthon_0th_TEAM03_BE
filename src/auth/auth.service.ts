@@ -94,14 +94,14 @@ export class AuthService {
         throw new UnauthorizedException('이메일 정보를 가져올 수 없습니다.');
       }
 
-      // 사용자 정보를 이용해서 로그인 처리
+      // 사용자 정보를 이용해서 로그인
       let user = await this.usersService.findUserByEmail(email);
 
-      // 사용자 정보가 없으면 회원가입 처리
+      // 사용자 정보가 없으면 회원가입
       if (!user) {
         user = await this.registerUser(email);
       }
-
+      // 로그인
       return this.loginUser(user);
     } catch (e) {
       console.error('Error during Kakao login:', e);

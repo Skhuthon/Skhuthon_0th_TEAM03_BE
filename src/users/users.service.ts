@@ -36,7 +36,7 @@ export class UsersService {
       },
     });
     if (!user) {
-      throw new BadRequestException('존재하지 않는 이메일입니다.');
+      return;
     }
     return user;
   }

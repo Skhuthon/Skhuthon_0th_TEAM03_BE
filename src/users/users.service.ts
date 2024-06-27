@@ -9,8 +9,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersModel)
     private readonly usersRepository: Repository<UsersModel>,
-  ) {
-  }
+  ) {}
 
   async createUser(dto: CreateUserDto) {
     const nicknameExist: boolean = await this.usersRepository.exists({

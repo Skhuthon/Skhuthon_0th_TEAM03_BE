@@ -1,9 +1,11 @@
 import { IsIn, IsNumber, IsOptional } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class BasePaginationDto {
+  @ApiProperty({ description: '페이지 번호, 기본값은 1', example: 1 })
   @IsNumber()
   @IsOptional()
-  page?: number;
+  page: number = 1;
 
   @IsNumber()
   @IsOptional()
@@ -23,7 +25,12 @@ export class BasePaginationDto {
   order__createdAt: 'ASC' | 'DESC' = 'ASC';
 
   // 가져올 데이터의 개수
+  @ApiProperty({
+    description: '가져올 데이터의 개수, 기본값은 12',
+    example: 12,
+    required: false,
+  })
   @IsNumber()
   @IsOptional()
-  take: number = 20;
+  take: number = 12;
 }

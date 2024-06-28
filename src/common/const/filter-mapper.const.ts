@@ -16,15 +16,6 @@ import {
   Not,
 } from 'typeorm';
 
-/**
- * where__id__not을
- *
- * {
- *   where:{
- *     id: Not(value)
- *   }
- * }
- */
 export const FILTER_MAPPER = {
   more_than: MoreThan,
   more_than_or_equal: MoreThanOrEqual,

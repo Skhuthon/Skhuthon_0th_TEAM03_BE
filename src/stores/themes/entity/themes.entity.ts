@@ -18,16 +18,9 @@ export class ThemesModel extends BaseModel {
   @Column()
   @ApiProperty({
     description: '테마명',
-    example: '공포의 집',
+    example: '베스트셀러',
   })
   title: string;
-
-  @ManyToOne(() => StoresModel, (store) => store.themes)
-  @ApiProperty({
-    description: '매장명',
-    type: () => StoresModel,
-  })
-  store: StoresModel;
 
   @Column({
     type: 'enum',
@@ -49,4 +42,10 @@ export class ThemesModel extends BaseModel {
     example: '공포',
   })
   genre: string;
+  @ManyToOne(() => StoresModel, (store) => store.themes)
+  @ApiProperty({
+    description: '매장명',
+    type: () => StoresModel,
+  })
+  store: StoresModel;
 }

@@ -3,14 +3,19 @@ import { CreateThemesDto } from './dto/create-themes.dto';
 import { UpdateThemesDto } from './dto/update-themes.dto';
 import { ThemesModel } from './entity/themes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
+import { CommonService } from '../../common/common.service';
+import { PaginateThemesDto } from './dto/paginate-themes.dto';
+import { DEFAULT_THEME_FIND_OPTIONS } from './const/default-theme-find-options.const';
 
 @Injectable()
 export class ThemesService {
   constructor(
     @InjectRepository(ThemesModel)
     private readonly themesRepository: Repository<ThemesModel>,
-  ) {}
+    private readonly commonService: CommonService,
+  ) {
+  }
 
   async create(createThemeDto: CreateThemesDto): Promise<ThemesModel> {
     const theme = this.themesRepository.create(createThemeDto);
@@ -18,7 +23,13 @@ export class ThemesService {
   }
 
   async findAll(): Promise<ThemesModel[]> {
-    return await this.themesRepository.find();
+    return await this.themesRepository.find({
+      ...DEFAULT_THEME_FIND_OPTIONS,
+      take: 10,
+      where: {
+        id: 2,
+      },
+    });
   }
 
   async findOne(themeId: number): Promise<ThemesModel> {
@@ -52,5 +63,32 @@ export class ThemesService {
     if (result.affected === 0) {
       throw new NotFoundException(`테마를 찾을 수 없습니다. ID: ${themeId}`);
     }
+  }
+
+  async pagePaginateThemes(dto: PaginateThemesDto) {
+    const query = this.themesRepository
+      .createQueryBuilder('theme')
+      .leftJoin('theme.store', 'store')
+      .leftJoin('store.region', 'region')
+      .addSelect(['store.id', 'store.name', 'store.reservationSite']);
+
+    if (dto.title) {
+      query.andWhere('theme.title LIKE :title', { title: `%${dto.title}%` });
+    }
+
+    if (dto.region) {
+      query.andWhere('region.name LIKE :region', { region: `%${dto.region}%` });
+    }
+
+    query
+      .skip((dto.page - 1) * dto.take)
+      .take(dto.take)
+      .orderBy('theme.createdAt', dto.order__createdAt);
+
+    const [themes, count] = await query.getManyAndCount();
+    return {
+      data: themes,
+      total: count,
+    };
   }
 }

@@ -20,6 +20,8 @@ import { StoresModule } from './stores/stores.module';
 import { ThemesModule } from './stores/themes/themes.module';
 import { ThemesModel } from './stores/themes/entity/themes.entity';
 import { StoresModel } from './stores/entity/stores.entity';
+import { RegionModule } from './region/region.module';
+import { RegionModel } from './region/entities/region.entity';
 
 @Module({
   imports: [
@@ -36,7 +38,13 @@ import { StoresModel } from './stores/entity/stores.entity';
         username: configService.get<string>(ENV_DB_USERNAME_KEY),
         password: configService.get<string>(ENV_DB_PASSWORD_KEY),
         database: configService.get<string>(ENV_DB_DATABASE_KEY),
-        entities: [UsersModel, ReviewsModel, StoresModel, ThemesModel],
+        entities: [
+          UsersModel,
+          ReviewsModel,
+          StoresModel,
+          ThemesModel,
+          RegionModel,
+        ],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -47,6 +55,7 @@ import { StoresModel } from './stores/entity/stores.entity';
     ReviewsModule,
     StoresModule,
     ThemesModule,
+    RegionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

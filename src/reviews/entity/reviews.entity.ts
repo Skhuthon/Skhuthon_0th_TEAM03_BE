@@ -1,8 +1,10 @@
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseModel } from '../../common/entity/base.entity';
 import { UsersModel } from '../../users/entity/users.entity';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString, Length } from 'class-validator';
 import { stringValidationMessage } from '../../common/validation-message/string-validation-message';
+import { numberValidationMessage } from '../../common/validation-message/number-validation-message';
+import { lengthValidationMessage } from '../../common/validation-message/length-validation-message';
 
 @Entity('reviews')
 export class ReviewsModel extends BaseModel {
@@ -30,20 +32,47 @@ export class ReviewsModel extends BaseModel {
   isSuccess: boolean;
 
   @Column()
+  @IsNumber(
+    {},
+    {
+      message: numberValidationMessage,
+    },
+  )
   numberOfPeople: number;
 
   @Column()
+  @IsNumber(
+    {},
+    {
+      message: numberValidationMessage,
+    },
+  )
   numberOfHintsUsed: number;
 
   @Column()
+  @IsNumber(
+    {},
+    {
+      message: numberValidationMessage,
+    },
+  )
   remainingTime: number;
 
   @Column()
+  @IsNumber(
+    {},
+    {
+      message: numberValidationMessage,
+    },
+  )
   totalThemeTime: number;
 
   @Column()
   @IsString({
     message: stringValidationMessage,
+  })
+  @Length(1, 500, {
+    message: lengthValidationMessage,
   })
   content: string;
 }

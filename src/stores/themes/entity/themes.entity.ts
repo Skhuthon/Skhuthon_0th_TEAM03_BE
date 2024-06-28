@@ -4,6 +4,7 @@ import { StoresModel } from '../../entity/stores.entity';
 import { DifficultyEnum } from '../../../common/enum/difficulty.enum';
 import { IsString } from 'class-validator';
 import { stringValidationMessage } from '../../../common/validation-message/string-validation-message';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('themes')
 export class ThemesModel extends BaseModel {
@@ -15,20 +16,37 @@ export class ThemesModel extends BaseModel {
    */
 
   @Column()
+  @ApiProperty({
+    description: '테마명',
+    example: '공포의 집',
+  })
   title: string;
 
   @ManyToOne(() => StoresModel, (store) => store.themes)
+  @ApiProperty({
+    description: '매장명',
+    type: () => StoresModel,
+  })
   store: StoresModel;
 
   @Column({
     type: 'enum',
     enum: Object.values(DifficultyEnum),
   })
+  @ApiProperty({
+    description: '난이도',
+    enum: DifficultyEnum,
+    example: DifficultyEnum.NORMAL,
+  })
   difficulty: DifficultyEnum;
 
   @Column()
   @IsString({
     message: stringValidationMessage,
+  })
+  @ApiProperty({
+    description: '장르',
+    example: '공포',
   })
   genre: string;
 }

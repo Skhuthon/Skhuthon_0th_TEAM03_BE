@@ -17,7 +17,9 @@ export class StoresModel extends BaseModel {
   @OneToMany(() => ThemesModel, (theme) => theme.store)
   themes: ThemesModel[];
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   reservationSite: string;
 
   @ManyToOne(() => RegionModel, (region) => region.stores)

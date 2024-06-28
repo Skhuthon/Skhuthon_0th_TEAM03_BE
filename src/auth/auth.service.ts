@@ -6,6 +6,7 @@ import { ENV_JWT_SECRET_KEY } from '../common/const/env-keys.const';
 import { UsersModel } from '../users/entity/users.entity';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -53,8 +54,11 @@ export class AuthService {
     });
   }
 
-  async registerUser(email: string) {
-    return this.usersService.createUser({ email });
+  async registerUser(email: string, nickname: string) {
+    const createUserDto = new CreateUserDto();
+    createUserDto.email = email;
+    createUserDto.nickname = nickname;
+    return this.usersService.createUser(createUserDto);
   }
 
   loginUser(user: Pick<UsersModel, 'email' | 'id'>) {
@@ -89,9 +93,10 @@ export class AuthService {
         this.http.get(this.KAKAO_USER_INFO_URL, { headers: userInfoHeaders }),
       );
 
+      const nickname = data.properties.nickname;
       const email = data.kakao_account.email;
-      if (!email) {
-        throw new UnauthorizedException('이메일 정보를 가져올 수 없습니다.');
+      if (!email || !nickname) {
+        throw new UnauthorizedException('사용자의 정보를 가져올 수 없습니다.');
       }
 
       // 사용자 정보를 이용해서 로그인
@@ -99,7 +104,7 @@ export class AuthService {
 
       // 사용자 정보가 없으면 회원가입
       if (!user) {
-        user = await this.registerUser(email);
+        user = await this.registerUser(email, nickname);
         return this.loginUser(user);
       }
       // 로그인

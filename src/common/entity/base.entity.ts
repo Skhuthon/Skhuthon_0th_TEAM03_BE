@@ -8,9 +8,13 @@ export abstract class BaseModel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    nullable: true,
+  })
   updatedAt: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    nullable: true,
+  })
   createdAt: Date;
 }

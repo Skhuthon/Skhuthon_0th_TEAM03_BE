@@ -23,6 +23,7 @@ export class UsersService {
 
     const userObject = this.usersRepository.create({
       email: dto.email,
+      nickname: dto.nickname,
     });
     const newUser = await this.usersRepository.save(userObject);
 

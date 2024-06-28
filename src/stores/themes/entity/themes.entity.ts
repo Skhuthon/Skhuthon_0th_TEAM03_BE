@@ -2,7 +2,8 @@ import { BaseModel } from '../../../common/entity/base.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { StoresModel } from '../../entity/stores.entity';
 import { DifficultyEnum } from '../../../common/enum/difficulty.enum';
-import { GenreEnum } from '../../../common/enum/genre.enum';
+import { IsString } from 'class-validator';
+import { stringValidationMessage } from '../../../common/validation-message/string-validation-message';
 
 @Entity('themes')
 export class ThemesModel extends BaseModel {
@@ -25,9 +26,9 @@ export class ThemesModel extends BaseModel {
   })
   difficulty: DifficultyEnum;
 
-  @Column({
-    type: 'enum',
-    enum: Object.values(GenreEnum),
+  @Column()
+  @IsString({
+    message: stringValidationMessage,
   })
-  genre: GenreEnum;
+  genre: string;
 }

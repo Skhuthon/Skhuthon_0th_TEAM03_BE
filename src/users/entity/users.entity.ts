@@ -22,6 +22,24 @@ export class UsersModel extends BaseModel {
     },
   )
   email: string;
+  @Column({
+    nullable: true,
+    }
+  )
+  @ApiProperty({
+    example: '이윤하',
+    description: '사용자 닉네임',
+  })
+  nickname: string;
+
+  @Column({
+    nullable: true,
+  })
+  @ApiProperty({
+    description: '성공 횟수',
+  })
+  successCount: number;
+
   @OneToMany(() => ReviewsModel, (review) => review.author)
   reviews: ReviewsModel[];
 }

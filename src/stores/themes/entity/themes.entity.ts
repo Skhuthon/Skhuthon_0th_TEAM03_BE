@@ -1,8 +1,8 @@
 import { BaseModel } from '../../../common/entity/base.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { StoresModel } from '../../entity/stores.entity';
-import { DifficultyEnum } from '../../../util/difficulty.enum';
-import { GenreEnum } from '../../../util/genre.enum';
+import { DifficultyEnum } from '../../../common/enum/difficulty.enum';
+import { GenreEnum } from '../../../common/enum/genre.enum';
 
 @Entity('themes')
 export class ThemesModel extends BaseModel {
@@ -21,13 +21,13 @@ export class ThemesModel extends BaseModel {
 
   @Column({
     type: 'enum',
-    enum: DifficultyEnum,
+    enum: Object.values(DifficultyEnum),
   })
   difficulty: DifficultyEnum;
 
   @Column({
     type: 'enum',
-    enum: GenreEnum,
+    enum: Object.values(GenreEnum),
   })
   genre: GenreEnum;
 }

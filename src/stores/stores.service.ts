@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 export class StoresService {
   constructor(
     @InjectRepository(StoresModel)
-    private readonly storesRepository: Repository<StoresModel>
-  ) {
-  }
+    private readonly storesRepository: Repository<StoresModel>,
+  ) {}
 }

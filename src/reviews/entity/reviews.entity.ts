@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseModel } from '../../common/entity/base.entity';
 import { UsersModel } from '../../users/entity/users.entity';
@@ -17,20 +18,36 @@ export class ReviewsModel extends BaseModel {
    * 6. 테마 총 시간: number
    * 7. 리뷰 내용: string
    */
+  @ApiProperty({
+    description: '리뷰 작성자',
+    type: () => UsersModel,
+  })
   @ManyToOne(() => UsersModel, (user) => user.reviews, {
     nullable: false,
   })
   author: UsersModel;
 
+  @ApiProperty({
+    example: '비밀의 가족',
+    description: '플레이한 테마 이름',
+  })
   @Column()
   @IsString({
     message: stringValidationMessage,
   })
   themeName: string;
 
+  @ApiProperty({
+    example: true,
+    description: '성공 여부',
+  })
   @Column()
   isSuccess: boolean;
 
+  @ApiProperty({
+    example: 4,
+    description: '인원 수',
+  })
   @Column()
   @IsNumber(
     {},
@@ -40,6 +57,10 @@ export class ReviewsModel extends BaseModel {
   )
   numberOfPeople: number;
 
+  @ApiProperty({
+    example: 2,
+    description: '힌트 사용 횟수',
+  })
   @Column()
   @IsNumber(
     {},
@@ -49,6 +70,10 @@ export class ReviewsModel extends BaseModel {
   )
   numberOfHintsUsed: number;
 
+  @ApiProperty({
+    example: 10,
+    description: '남은 시간',
+  })
   @Column()
   @IsNumber(
     {},
@@ -58,6 +83,10 @@ export class ReviewsModel extends BaseModel {
   )
   remainingTime: number;
 
+  @ApiProperty({
+    example: 60,
+    description: '테마 총 시간',
+  })
   @Column()
   @IsNumber(
     {},
@@ -67,6 +96,10 @@ export class ReviewsModel extends BaseModel {
   )
   totalThemeTime: number;
 
+  @ApiProperty({
+    example: '인테리어가 너무 예쁘고 문제가 다양해서 재밌었어요!',
+    description: '리뷰 내용',
+  })
   @Column()
   @IsString({
     message: stringValidationMessage,

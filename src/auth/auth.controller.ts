@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Header, Query, Post } from '@nestjs/common';
+import { Controller, Get, Res, Header, Query, Post, Param } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
@@ -36,7 +36,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: '카카오 사용자 정보 조회 성공' })
   @ApiQuery({ name: 'code', required: true, description: '카카오 인증 코드' })
   @Post('kakao/redirect')
-  async getKakaoInfo(@Query('code') code: string, @Res() res: Response) {
+  async getKakaoInfo(@Param('code') code: string, @Res() res: Response) {
     const client_id = this.configService.get<string>(ENV_KAKAO_CLIENT_ID_KEY);
     const redirect_uri = this.configService.get<string>(
       ENV_KAKAO_REDIRECT_URL_KEY,

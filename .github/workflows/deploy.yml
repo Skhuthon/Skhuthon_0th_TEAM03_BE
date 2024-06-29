@@ -22,6 +22,7 @@ jobs:
           script: |
             cd /home/ubuntu/Skhuthon_0th_TEAM03_BE
             rm -rf .env
+            git reset --hard
             git config pull.rebase false
             git pull origin main
             echo "$ENV" > .env

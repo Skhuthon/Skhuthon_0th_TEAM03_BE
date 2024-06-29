@@ -89,7 +89,7 @@ export class AuthService {
     try {
       // https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=0ff9e937e20369b1d34a255f00178da2&redirect_uri=http://localhost:3000/auth/kakao/redirect&code=M-qfQEss2D4I3H26KbCA-CmXvCsNnD5wH-Tx0M-bUtvZBmBNzEQL-AAAAAQKPXTaAAABkGVjwP7OkqTnJF629A
       const response = await firstValueFrom(
-        this.http.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${client_id}&redirect_uri=${redirect_uri}&code=${code}`, {}, {
+        this.http.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${client_id}&redirect_uri=https://bangpro.vercel.app/auth/kakao/redirect&code=${code}`, {}, {
           headers: tokenHeaders,
         }),
       );

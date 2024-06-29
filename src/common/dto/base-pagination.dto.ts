@@ -26,11 +26,11 @@ export class BasePaginationDto {
 
   // 가져올 데이터의 개수
   @ApiProperty({
-    description: '가져올 데이터의 개수, 기본값은 12',
+    description: '가져올 데이터의 개수, 기본값은 20',
     example: 12,
     required: false,
   })
   @IsNumber()
   @IsOptional()
-  take: number = 12;
+  take: number = 20;
 }

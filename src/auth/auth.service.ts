@@ -7,6 +7,7 @@ import { UsersModel } from '../users/entity/users.entity';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -54,22 +55,23 @@ export class AuthService {
     });
   }
 
-  async registerUser(email: string, nickname: string, ) {
+  async registerUser(email: string, nickname: string) {
     const createUserDto = new CreateUserDto();
     createUserDto.email = email;
     createUserDto.nickname = nickname;
     return this.usersService.createUser(createUserDto);
   }
 
-  loginUser(user: Pick<UsersModel, 'email' | 'id'>) {
+  loginUser(user: Pick<UsersModel, 'email' | 'id'>, res: Response) {
     const accessToken = this.signToken(user);
-    return { accessToken };
+    res.redirect(`http://localhost:3000/login?accessToken=${accessToken}`);
   }
 
   async kakaoLogin(
     client_id: string,
     redirect_uri: string,
     code: string,
+    res: Response,
   ) {
     const config = {
       grant_type: 'authorization_code',
@@ -109,10 +111,10 @@ export class AuthService {
       // 사용자 정보가 없으면 회원가입
       if (!user) {
         user = await this.registerUser(email, nickname);
-        return this.loginUser(user);
+        return this.loginUser(user, res);
       }
       // 로그인
-      return this.loginUser(user);
+      return this.loginUser(user, res);
     } catch (e) {
       console.error('Error during Kakao login:', e);
       throw new UnauthorizedException('카카오 로그인 중 오류가 발생했습니다.');

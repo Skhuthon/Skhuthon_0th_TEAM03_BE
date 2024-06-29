@@ -18,7 +18,8 @@ import {
   ApiOperation,
   ApiResponse,
   ApiParam,
-  ApiBody, ApiQuery,
+  ApiBody,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { CreateThemesDto } from './dto/create-themes.dto';
 import { UpdateThemesDto } from './dto/update-themes.dto';

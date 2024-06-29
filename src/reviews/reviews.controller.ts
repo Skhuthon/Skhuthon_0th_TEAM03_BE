@@ -68,7 +68,6 @@ export class ReviewsController {
   @ApiResponse({ status: 401, description: '인증 실패' })
   @ApiResponse({ status: 403, description: '자신의 리뷰가 아니라 권한 없음' })
   @UseGuards(AccessTokenGuard)
-  @UseGuards(IsReviewMine)
   @Patch(':reviewId')
   async patchReviews(
     @Param('reviewId', ParseIntPipe) reviewId: number,
@@ -84,7 +83,6 @@ export class ReviewsController {
   @ApiResponse({ status: 401, description: '인증 실패' })
   @ApiResponse({ status: 403, description: '자신의 리뷰가 아니라 권한 없음' })
   @UseGuards(AccessTokenGuard)
-  @UseGuards(IsReviewMine)
   @Delete(':reviewId')
   deleteReviews(@Param('reviewId', ParseIntPipe) reviewId: number) {
     return this.reviewsService.deleteReview(reviewId);

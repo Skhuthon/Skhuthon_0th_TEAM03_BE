@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -23,6 +23,7 @@ import { StoresModel } from './stores/entity/stores.entity';
 import { RegionModule } from './region/region.module';
 import { RegionModel } from './region/entities/region.entity';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { LogMiddleware } from './common/middleware/log-middleware';
 
 @Module({
   imports: [

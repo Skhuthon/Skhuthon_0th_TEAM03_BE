@@ -26,6 +26,7 @@ import { UpdateThemesDto } from './dto/update-themes.dto';
 import { ThemesModel } from './entity/themes.entity';
 import { PaginateThemesDto } from './dto/paginate-themes.dto';
 import { PaginatedThemesResponseDto } from './dto/paginated-themes-response.dto';
+import { SuggestThemesDto } from './dto/suggest-themes-dto';
 
 @ApiTags('테마 관련 API')
 @Controller('themes')
@@ -87,19 +88,18 @@ export class ThemesController {
   @ApiParam({ name: 'id', description: '테마 ID' })
   @ApiResponse({ status: 204, description: '삭제 성공' })
   @ApiResponse({ status: 404, description: '테마를 찾을 수 없음' })
-  async remove(@Param('themeId') id: string) {
+  async remove(@Param('themeId') id: number) {
     return await this.themesService.remove(id);
   }
 
-  @Get('suggest')
+  @Post('suggest')
   @ApiOperation({ summary: '지역, 장르, 난이도를 받아 3개의 테마 랜덤 반환' })
   @ApiQuery({ name: 'region', description: '지역', required: true })
   @ApiQuery({ name: 'genre', description: '장르', required: true })
   @ApiQuery({ name: 'difficulty', description: '난이도', required: true })
   @ApiResponse({ status: 200, description: '성공', type: [ThemesModel] })
-  async suggestThemes(
-    @Query() query: { region: string; genre: string; difficulty: string },
-  ) {
-    return await this.themesService.suggestThemes(query);
+  async getSuggestedThemes(@Body() dto: SuggestThemesDto) {
+    console.log(dto);
+    return await this.themesService.suggestThemes(dto);
   }
 }

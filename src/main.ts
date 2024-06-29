@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { setupSwagger } from 'src/util/swagger';
 import * as dotenv from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
+import { LogMiddleware } from './common/middleware/log-middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,6 +24,7 @@ async function bootstrap() {
     credentials: true,
     exposedHeaders: ['Authorization'],
   });
+  app.use(new LogMiddleware().use);
   await app.listen(3000);
 }
 bootstrap();

@@ -38,7 +38,7 @@ export class UsersModel extends BaseModel {
   @ApiProperty({
     description: '성공 횟수',
   })
-  successCount: number;
+  successCount: number = 0;
 
   @OneToMany(() => ReviewsModel, (review) => review.author)
   reviews: ReviewsModel[];

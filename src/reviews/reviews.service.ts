@@ -42,7 +42,7 @@ export class ReviewsService {
       },
       ...reviewDto,
     });
-    if (reviewDto.isSuccess === true) {
+    if (review.isSuccess === true) {
       // 유저의 성공 횟수를 1 증가시킨다.
       review.author.successCount += 1;
     }

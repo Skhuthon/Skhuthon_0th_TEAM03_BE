@@ -35,6 +35,7 @@ export class ReviewsService {
   }
 
   async createReview(authorId: number, reviewDto: CreateReviewsDto) {
+    console.log(`reviewDto: ${reviewDto}`);
     const review = await this.reviewsRepository.create({
       author: {
         id: authorId,

@@ -66,7 +66,7 @@ export class AuthService {
     const accessToken = this.signToken(user);
     console.log('accessToken:', accessToken);
     console.log('nickname:', nickname);
-    return res.json({ accessToken, nickname });
+    return { accessToken, nickname };
   }
 
   async kakaoLogin(

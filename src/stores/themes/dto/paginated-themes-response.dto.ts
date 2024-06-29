@@ -7,4 +7,7 @@ export class PaginatedThemesResponseDto {
 
   @ApiProperty({ description: '검색된 테마의 수' })
   total: number;
+
+  @ApiProperty({ description: '전체 페이지 수' })
+  totalPage: number;
 }

@@ -25,6 +25,7 @@ import { CreateThemesDto } from './dto/create-themes.dto';
 import { UpdateThemesDto } from './dto/update-themes.dto';
 import { ThemesModel } from './entity/themes.entity';
 import { PaginateThemesDto } from './dto/paginate-themes.dto';
+import { PaginatedThemesResponseDto } from './dto/paginated-themes-response.dto';
 
 @ApiTags('테마 관련 API')
 @Controller('themes')
@@ -35,7 +36,11 @@ export class ThemesController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiOperation({ summary: '테마명으로 페이지 기반 페이지네이션' })
   @ApiQuery({ name: 'page', description: '페이지 번호', required: true })
-  @ApiResponse({ status: 200, description: '성공', type: [ThemesModel] })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: [PaginatedThemesResponseDto],
+  })
   async findAll(@Query() query: PaginateThemesDto) {
     return await this.themesService.pagePaginateThemes(query);
   }

@@ -35,7 +35,7 @@ export class ReviewsController {
   @Get()
   @UseGuards(AccessTokenGuard)
   async getReviews(@User() user: UsersModel) {
-    return await this.reviewsService.getReviews(user.id);
+    return await this.reviewsService.getMyReviews(user.id);
   }
 
   @ApiOperation({ summary: '테마 리뷰 상세 조회' })

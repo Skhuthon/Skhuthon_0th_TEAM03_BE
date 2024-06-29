@@ -12,10 +12,12 @@ export class ReviewsService {
     private readonly reviewsRepository: Repository<ReviewsModel>,
   ) {}
 
-  async getReviews(id: number) {
+  async getMyReviews(userId: number) {
     return await this.reviewsRepository.find({
       where: {
-        id,
+        author: {
+          id: userId,
+        },
       },
     });
   }

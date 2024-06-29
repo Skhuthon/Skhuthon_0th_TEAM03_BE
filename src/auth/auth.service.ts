@@ -64,6 +64,8 @@ export class AuthService {
 
   loginUser(user: Pick<UsersModel, 'email' | 'id'>, res: Response, nickname: string) {
     const accessToken = this.signToken(user);
+    console.log('accessToken:', accessToken);
+    console.log('nickname:', nickname);
     return res.json({ accessToken, nickname });
   }
 

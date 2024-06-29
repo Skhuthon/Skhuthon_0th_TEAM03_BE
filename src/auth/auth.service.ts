@@ -20,7 +20,7 @@ export class AuthService {
 
   private readonly BEARER_PREFIX = 'Bearer';
   private readonly JWT_EXPIRATION = '365d';
-  private readonly KAKAO_TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
+  private readonly KAKAO_TOKEN_URL = 'https://kauth.kakao.com/oauth/token?';
   private readonly KAKAO_USER_INFO_URL = 'https://kapi.kakao.com/v2/user/me';
 
   extractTokenFromHeader(header: string) {
@@ -87,7 +87,9 @@ export class AuthService {
 
     try {
       // 토큰을 받아온다.
-      const response = this.http.post(this.KAKAO_TOKEN_URL, params, { headers: tokenHeaders });
+      const response = this.http.post(this.KAKAO_TOKEN_URL, params, {
+        headers: tokenHeaders,
+      });
       console.log(response);
       const tokenResponse = await firstValueFrom(response);
       const { access_token } = tokenResponse.data;

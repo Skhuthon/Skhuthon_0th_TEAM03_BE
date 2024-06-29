@@ -127,4 +127,13 @@ export class AuthService {
       throw new UnauthorizedException('카카오 로그인 중 오류가 발생했습니다.');
     }
   }
+
+  async loginWithEmail(email: string) {
+    const user = await this.usersService.findUserByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('사용자 정보를 찾을 수 없습니다.');
+    }
+    const accessToken = this.signToken(user);
+    return accessToken;
+  }
 }

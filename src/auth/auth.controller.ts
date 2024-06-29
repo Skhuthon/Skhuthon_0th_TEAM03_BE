@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Header, Query, Post, Param, Body } from '@nestjs/common';
+import { Controller, Get, Res, Header, Post, Body } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
@@ -43,5 +43,11 @@ export class AuthController {
     );
     console.log(`code: ${code}`);
     await this.authService.kakaoLogin(client_id, redirect_uri, code, res);
+  }
+
+  @Post('login/email')
+  async loginWithEmail(@Body() body: { email: string }) {
+    const accessToken = await this.authService.loginWithEmail(body.email);
+    return { accessToken };
   }
 }

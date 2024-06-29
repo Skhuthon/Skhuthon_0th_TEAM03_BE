@@ -19,7 +19,6 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { UpdateReviewsDto } from './dto/update-reviews.dto';
-import { IsReviewMine } from './guard/is-review-mine';
 import { User } from '../users/decorator/user.decorator';
 import { UsersModel } from '../users/entity/users.entity';
 import { AccessTokenGuard } from '../auth/guard/bearer-token.guard';
@@ -35,8 +34,8 @@ export class ReviewsController {
   @ApiResponse({ status: 401, description: '인증 실패' })
   @Get()
   @UseGuards(AccessTokenGuard)
-  async getReviews() {
-    return await this.reviewsService.getReviews();
+  async getReviews(@User() user: UsersModel) {
+    return await this.reviewsService.getReviews(user.id);
   }
 
   @ApiOperation({ summary: '테마 리뷰 상세 조회' })

@@ -64,7 +64,9 @@ export class AuthService {
 
   loginUser(user: Pick<UsersModel, 'email' | 'id'>, res: Response) {
     const accessToken = this.signToken(user);
-    res.redirect(`http://localhost:3000/auth/kakao/redirect?accessToken=${accessToken}`);
+    res.redirect(
+      `http://localhost:3000/auth/kakao/redirect?accessToken=${accessToken}`,
+    );
   }
 
   async kakaoLogin(
@@ -83,41 +85,35 @@ export class AuthService {
     const tokenHeaders = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     };
+    // 토큰을 받아온다.
+    const tokenResponse = await firstValueFrom(
+      this.http.post(this.KAKAO_TOKEN_URL, params, { headers: tokenHeaders }),
+    );
+    const { access_token } = tokenResponse.data;
 
-    try {
-      // 토큰을 받아온다.
-      const tokenResponse = await firstValueFrom(
-        this.http.post(this.KAKAO_TOKEN_URL, params, { headers: tokenHeaders }),
-      );
-      const { access_token } = tokenResponse.data;
+    // 받아온 토큰으로 사용자 정보를 가져온다.
+    const userInfoHeaders = {
+      Authorization: `Bearer ${access_token}`,
+    };
+    const { data } = await firstValueFrom(
+      this.http.get(this.KAKAO_USER_INFO_URL, { headers: userInfoHeaders }),
+    );
 
-      // 받아온 토큰으로 사용자 정보를 가져온다.
-      const userInfoHeaders = {
-        Authorization: `Bearer ${access_token}`,
-      };
-      const { data } = await firstValueFrom(
-        this.http.get(this.KAKAO_USER_INFO_URL, { headers: userInfoHeaders }),
-      );
-
-      const nickname = data.properties.nickname;
-      const email = data.kakao_account.email;
-      if (!email || !nickname) {
-        throw new UnauthorizedException('사용자의 정보를 가져올 수 없습니다.');
-      }
-
-      // 사용자 정보를 이용해서 로그인
-      let user = await this.usersService.findUserByEmail(email);
-
-      // 사용자 정보가 없으면 회원가입
-      if (!user) {
-        user = await this.registerUser(email, nickname);
-        return this.loginUser(user, res);
-      }
-      // 로그인
-      return this.loginUser(user, res);
-    } catch (e) {
-      console.error('Error during Kakao login:', e);
-      throw new UnauthorizedException('카카오 로그인 중 오류가 발생했습니다.');
+    const nickname = data.properties.nickname;
+    const email = data.kakao_account.email;
+    if (!email || !nickname) {
+      throw new UnauthorizedException('사용자의 정보를 가져올 수 없습니다.');
     }
+
+    // 사용자 정보를 이용해서 로그인
+    let user = await this.usersService.findUserByEmail(email);
+
+    // 사용자 정보가 없으면 회원가입
+    if (!user) {
+      user = await this.registerUser(email, nickname);
+      return this.loginUser(user, res);
+    }
+    // 로그인
+    return this.loginUser(user, res);
   }
 }

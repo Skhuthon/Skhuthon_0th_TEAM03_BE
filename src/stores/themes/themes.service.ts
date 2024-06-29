@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Query } from '@nestjs/common';
 import { CreateThemesDto } from './dto/create-themes.dto';
 import { UpdateThemesDto } from './dto/update-themes.dto';
 import { ThemesModel } from './entity/themes.entity';
@@ -21,6 +21,7 @@ export class ThemesService {
     const theme = this.themesRepository.create(createThemeDto);
     return await this.themesRepository.save(theme);
   }
+
   async findAll(): Promise<ThemesModel[]> {
     return await this.themesRepository.find({
       ...DEFAULT_THEME_FIND_OPTIONS,
@@ -94,5 +95,28 @@ export class ThemesService {
       total: count,
       totalPages,
     };
+  }
+
+  /**
+   * 지역, 장르, 난이도를 받아 테마를 조회하고, 3개만 랜덤으로 반환
+   */
+  async suggestThemes(params: {
+    region: string;
+    genre: string;
+    difficulty: string;
+  }): Promise<ThemesModel[]> {
+    const { region, genre, difficulty } = params;
+    const themesQuery = this.themesRepository
+      .createQueryBuilder('theme')
+      .leftJoin('theme.store', 'store')
+      .leftJoin('store.region', 'region')
+      .addSelect(['store.id', 'store.name', 'store.reservationSite'])
+      .where('region.name = :region', { region })
+      .andWhere('theme.genre = :genre', { genre })
+      .andWhere('theme.difficulty = :difficulty', { difficulty })
+      .orderBy('RAND()')
+      .limit(3);
+
+    return await themesQuery.getMany();
   }
 }

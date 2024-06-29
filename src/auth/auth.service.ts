@@ -64,7 +64,7 @@ export class AuthService {
 
   loginUser(user: Pick<UsersModel, 'email' | 'id'>, res: Response) {
     const accessToken = this.signToken(user);
-    res.redirect(`http://localhost:3000/?accessToken=${accessToken}`);
+    res.redirect(`http://localhost:3000/auth/kakao/redirect?accessToken=${accessToken}`);
   }
 
   async kakaoLogin(

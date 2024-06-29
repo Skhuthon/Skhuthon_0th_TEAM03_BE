@@ -18,6 +18,7 @@ export const User = createParamDecorator(
     if (data) {
       return user[data];
     }
+    console.log(user);
 
     return user;
   },

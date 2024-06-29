@@ -90,7 +90,7 @@ export class AuthService {
       // 토큰을 받아온다.
 
       const response = await firstValueFrom(
-        this.http.post(this.KAKAO_TOKEN_URL, '', { headers: tokenHeaders }),
+        this.http.post(this.KAKAO_TOKEN_URL, params, { headers: tokenHeaders }),
       );
       const { access_token } = response.data;
       console.log('access_token:', access_token);

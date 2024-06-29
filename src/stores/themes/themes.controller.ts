@@ -27,6 +27,7 @@ import { ThemesModel } from './entity/themes.entity';
 import { PaginateThemesDto } from './dto/paginate-themes.dto';
 import { PaginatedThemesResponseDto } from './dto/paginated-themes-response.dto';
 import { SuggestThemesDto } from './dto/suggest-themes-dto';
+import { SearchThemesDto } from './dto/search-themes-dto';
 
 @ApiTags('테마 관련 API')
 @Controller('themes')
@@ -101,5 +102,15 @@ export class ThemesController {
   async getSuggestedThemes(@Body() dto: SuggestThemesDto) {
     console.log(dto);
     return await this.themesService.suggestThemes(dto);
+  }
+
+  @Post('search')
+  @ApiOperation({ summary: '지역, 테마명을 받아 관련순으로 반환' })
+  @ApiQuery({ name: 'region', description: '지역', required: true })
+  @ApiQuery({ name: 'title', description: '테마명', required: true })
+  @ApiResponse({ status: 200, description: '성공', type: [ThemesModel] })
+  async getSearchThemesWithRegion(@Body() dto: SearchThemesDto) {
+    console.log(dto);
+    return await this.themesService.searchThemesWithRegion(dto);
   }
 }

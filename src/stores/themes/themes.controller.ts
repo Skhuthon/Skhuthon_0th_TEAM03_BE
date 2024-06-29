@@ -97,7 +97,9 @@ export class ThemesController {
   @ApiQuery({ name: 'genre', description: '장르', required: true })
   @ApiQuery({ name: 'difficulty', description: '난이도', required: true })
   @ApiResponse({ status: 200, description: '성공', type: [ThemesModel] })
-  async suggestThemes(@Query() query: {  }) {
+  async suggestThemes(
+    @Query() query: { region: string; genre: string; difficulty: string },
+  ) {
     return await this.themesService.suggestThemes(query);
   }
 }

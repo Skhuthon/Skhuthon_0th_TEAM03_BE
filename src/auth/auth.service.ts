@@ -100,7 +100,9 @@ export class AuthService {
         Authorization: `Bearer ${access_token}`,
       };
       const { data } = await firstValueFrom(
-        this.http.get(this.KAKAO_USER_INFO_URL, { headers: userInfoHeaders }),
+        this.http.get(`https://kauth.kakao.com/oauth/token?${params}`, {
+          headers: userInfoHeaders,
+        }),
       );
 
       const nickname = data.properties.nickname;

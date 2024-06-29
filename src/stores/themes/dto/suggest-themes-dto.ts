@@ -6,7 +6,7 @@ import { stringValidationMessage } from '../../../common/validation-message/stri
 export class SuggestThemesDto {
   @ApiProperty({ description: '장르', example: '공포' })
   @IsString({
-    message: '테마명은 문자열이어야 합니다.',
+    message: '장르명은 문자열이어야 합니다.',
   })
   @IsNotEmpty()
   genre: string;

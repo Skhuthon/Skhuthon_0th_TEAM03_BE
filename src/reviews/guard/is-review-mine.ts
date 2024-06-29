@@ -13,9 +13,7 @@ import { Request } from 'express';
 export class IsReviewMine implements CanActivate {
   constructor(private readonly reviewService: ReviewsService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const req = context.switchToHttp().getRequest() as Request & {
-      user: UsersModel;
-    };
+    const req = context.switchToHttp().getRequest();
 
     const user = req.user;
 

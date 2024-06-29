@@ -79,6 +79,7 @@ export class AuthService {
       redirect_uri,
       code,
     };
+    console.log('config:', config);
     const params = new URLSearchParams(config).toString();
     console.log('params:', params);
     const tokenHeaders = {

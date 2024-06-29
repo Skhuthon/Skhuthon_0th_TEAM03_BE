@@ -8,12 +8,16 @@ import { CommonService } from '../../common/common.service';
 import { PaginateThemesDto } from './dto/paginate-themes.dto';
 import { DEFAULT_THEME_FIND_OPTIONS } from './const/default-theme-find-options.const';
 import { SuggestThemesDto } from './dto/suggest-themes-dto';
+import { SearchThemesDto } from './dto/search-themes-dto';
+import { FuzzyService } from 'src/fuzzy/fuzzy.service';
+
 @Injectable()
 export class ThemesService {
   constructor(
     @InjectRepository(ThemesModel)
     private readonly themesRepository: Repository<ThemesModel>,
     private readonly commonService: CommonService,
+    private readonly fuzzyService: FuzzyService,
   ) {}
 
   async create(createThemeDto: CreateThemesDto): Promise<ThemesModel> {
@@ -111,5 +115,23 @@ export class ThemesService {
       .limit(3);
 
     return await themesQuery.getMany();
+  }
+
+  /**
+   * 지역, 테마명을 받아 관련순으로 반환
+   */
+  async searchThemesWithRegion(dto: SearchThemesDto): Promise<ThemesModel[]> {
+    const fuzzyPattern = this.fuzzyService.createFuzzyMatcher(dto.title);
+
+    const themesQuery = this.themesRepository
+      .createQueryBuilder('theme')
+      .leftJoin('theme.store', 'store')
+      .leftJoin('store.region', 'region')
+      .addSelect(['store.id', 'store.name', 'store.reservationSite'])
+      .where('region.name = :region', { region: dto.region })
+      .andWhere('theme.title ~* :fuzzyPattern', { fuzzyPattern })
+      .getMany();
+      
+    return await themesQuery;
   }
 }

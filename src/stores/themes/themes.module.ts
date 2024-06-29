@@ -4,9 +4,13 @@ import { ThemesController } from './themes.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThemesModel } from './entity/themes.entity';
 import { CommonModule } from '../../common/common.module';
+import { FuzzyModule } from 'src/fuzzy/fuzzy.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ThemesModel]), CommonModule],
+  imports: [TypeOrmModule.forFeature([ThemesModel]), 
+  CommonModule,
+  FuzzyModule,
+  ],
   controllers: [ThemesController],
   providers: [ThemesService],
 })

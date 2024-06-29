@@ -100,7 +100,7 @@ export class AuthService {
         Authorization: `Bearer ${access_token}`,
       };
       const { data } = await firstValueFrom(
-        this.http.get(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${client_id}&redirect_uri=${redirect_uri}&code=${code}`, {
+        this.http.get(`https://kapi.kakao.com/v2/user/me`, {
           headers: userInfoHeaders,
         }),
       );

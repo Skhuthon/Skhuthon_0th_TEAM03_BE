@@ -73,23 +73,22 @@ export class AuthService {
     code: string,
     res: Response,
   ) {
-    const config = {
-      grant_type: 'authorization_code',
-      client_id,
-      redirect_uri,
-      code,
-    };
-    const params = new URLSearchParams(config).toString();
-    console.log('params:', params);
+    // const config = {
+    //   grant_type: 'authorization_code',
+    //   client_id,
+    //   redirect_uri,
+    //   code,
+    // };
+    // const params = new URLSearchParams(config).toString();
+    // console.log('params:', params);
     const tokenHeaders = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     };
 
     try {
-      // 토큰을 받아온다.
-
+      // https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=0ff9e937e20369b1d34a255f00178da2&redirect_uri=http://localhost:3000/auth/kakao/redirect&code=M-qfQEss2D4I3H26KbCA-CmXvCsNnD5wH-Tx0M-bUtvZBmBNzEQL-AAAAAQKPXTaAAABkGVjwP7OkqTnJF629A
       const response = await firstValueFrom(
-        this.http.post(`https://kauth.kakao.com/oauth/token?${params}`, '', {
+        this.http.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${client_id}&redirect_uri=${redirect_uri}&code=${code}`, {}, {
           headers: tokenHeaders,
         }),
       );
@@ -101,7 +100,7 @@ export class AuthService {
         Authorization: `Bearer ${access_token}`,
       };
       const { data } = await firstValueFrom(
-        this.http.get(`https://kauth.kakao.com/oauth/token?${params}`, {
+        this.http.get(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${client_id}&redirect_uri=${redirect_uri}&code=${code}`, {
           headers: userInfoHeaders,
         }),
       );

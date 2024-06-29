@@ -16,6 +16,18 @@ export class ReviewsService {
     return await this.reviewsRepository.find();
   }
 
+  async getReviewbyReviewId(reviewId: number) {
+    const review = await this.reviewsRepository.findOne({
+      where: {
+        id: reviewId,
+      },
+    });
+    if (!review) {
+      throw new NotFoundException('해당하는 리뷰를 찾을 수 없습니다.');
+    }
+    return review;
+  }
+
   async createReview(authorId: number, reviewDto: CreateReviewsDto) {
     const review = this.reviewsRepository.create({
       author: {

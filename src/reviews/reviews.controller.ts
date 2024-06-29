@@ -39,6 +39,16 @@ export class ReviewsController {
     return await this.reviewsService.getReviews();
   }
 
+  @ApiOperation({ summary: '테마 리뷰 상세 조회' })
+  @ApiParam({ name: 'reviewId', required: true, description: '리뷰 ID' })
+  @ApiResponse({ status: 200, description: '리뷰 상세 조회 성공' })
+  @ApiResponse({ status: 401, description: '인증 실패' })
+  @Get(':reviewId')
+  @UseGuards(AccessTokenGuard)
+  async getReview(@Param('reviewId', ParseIntPipe) reviewId: number) {
+    return await this.reviewsService.getReviewbyReviewId(reviewId);
+  }
+
   @ApiOperation({ summary: '테마 리뷰 작성하기' })
   @ApiBody({ type: CreateReviewsDto })
   @ApiResponse({ status: 201, description: '리뷰 작성 성공' })

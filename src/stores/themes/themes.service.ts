@@ -21,7 +21,6 @@ export class ThemesService {
     const theme = this.themesRepository.create(createThemeDto);
     return await this.themesRepository.save(theme);
   }
-
   async findAll(): Promise<ThemesModel[]> {
     return await this.themesRepository.find({
       ...DEFAULT_THEME_FIND_OPTIONS,
@@ -77,6 +76,9 @@ export class ThemesService {
     }
 
     if (dto.region) {
+      if (dto.region === '서울 전체') {
+        dto.region = '';
+      }
       query.andWhere('region.name LIKE :region', { region: `%${dto.region}%` });
     }
 

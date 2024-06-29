@@ -56,6 +56,7 @@ export class ReviewsController {
   @Post()
   @UseGuards(AccessTokenGuard)
   async postReviews(@User() user: UsersModel, @Body() body: CreateReviewsDto) {
+    console.log(`body: ${body}`);
     return await this.reviewsService.createReview(user.id, body);
   }
 

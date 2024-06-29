@@ -16,6 +16,16 @@
 
 <br>
 
+### ERD
+![image](https://github.com/Skhuthon/Skhuthon_0th_TEAM03_BE/assets/96938589/9de2d0f9-baa9-42c8-b27f-705e1cbc8ea9)
+<br>
+
+### 아키텍처
+![image](https://github.com/Skhuthon/Skhuthon_0th_TEAM03_BE/assets/96938589/14148f20-46d4-49dd-8483-579e7f9853d8)
+
+
+<br>
+
 ### 배포 주소
 - FrontEnd : https://bangpro.vercel.app/themeList <br>
 - BackEnd : https://api.labyrinth30-edu.link

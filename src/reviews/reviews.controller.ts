@@ -45,7 +45,7 @@ export class ReviewsController {
   @Get(':reviewId')
   @UseGuards(AccessTokenGuard)
   async getReview(@Param('reviewId', ParseIntPipe) reviewId: number) {
-    return await this.reviewsService.getReviewbyReviewId(reviewId);
+    return await this.reviewsService.getReviewByReviewId(reviewId);
   }
 
   @ApiOperation({ summary: '테마 리뷰 작성하기' })

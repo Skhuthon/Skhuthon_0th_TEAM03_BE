@@ -22,7 +22,7 @@ export class ReviewsService {
     });
   }
 
-  async getReviewbyReviewId(reviewId: number) {
+  async getReviewByReviewId(reviewId: number) {
     const review = await this.reviewsRepository.findOne({
       where: {
         id: reviewId,

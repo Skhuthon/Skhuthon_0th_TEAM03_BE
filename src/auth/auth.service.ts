@@ -20,7 +20,7 @@ export class AuthService {
 
   private readonly BEARER_PREFIX = 'Bearer';
   private readonly JWT_EXPIRATION = '365d';
-  private readonly KAKAO_TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
+  private readonly KAKAO_TOKEN_URL = 'https://kauth.kakao.com/oauth/token?';
   private readonly KAKAO_USER_INFO_URL = 'https://kapi.kakao.com/v2/user/me';
 
   extractTokenFromHeader(header: string) {

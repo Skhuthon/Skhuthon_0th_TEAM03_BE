@@ -3,7 +3,7 @@ import { CreateThemesDto } from './dto/create-themes.dto';
 import { UpdateThemesDto } from './dto/update-themes.dto';
 import { ThemesModel } from './entity/themes.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CommonService } from '../../common/common.service';
 import { PaginateThemesDto } from './dto/paginate-themes.dto';
 import { DEFAULT_THEME_FIND_OPTIONS } from './const/default-theme-find-options.const';

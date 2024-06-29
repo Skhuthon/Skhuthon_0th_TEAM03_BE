@@ -79,7 +79,6 @@ export class AuthService {
       redirect_uri,
       code,
     };
-    console.log('config:', config);
     const params = new URLSearchParams(config).toString();
     console.log('params:', params);
     const tokenHeaders = {
@@ -90,7 +89,9 @@ export class AuthService {
       // 토큰을 받아온다.
 
       const response = await firstValueFrom(
-        this.http.post(this.KAKAO_TOKEN_URL, params, { headers: tokenHeaders }),
+        this.http.post(`https://kauth.kakao.com/oauth/token?${params}`, '', {
+          headers: tokenHeaders,
+        }),
       );
       const { access_token } = response.data;
       console.log('access_token:', access_token);

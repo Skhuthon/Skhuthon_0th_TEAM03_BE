@@ -20,7 +20,7 @@ export class AuthService {
 
   private readonly BEARER_PREFIX = 'Bearer';
   private readonly JWT_EXPIRATION = '365d';
-  private readonly KAKAO_TOKEN_URL = 'https://kauth.kakao.com/oauth/token';
+  private readonly KAKAO_TOKEN_URL = 'https://kauth.kakao.com/oauth/token?';
   private readonly KAKAO_USER_INFO_URL = 'https://kapi.kakao.com/v2/user/me';
 
   extractTokenFromHeader(header: string) {
@@ -64,7 +64,7 @@ export class AuthService {
 
   loginUser(user: Pick<UsersModel, 'email' | 'id'>, res: Response) {
     const accessToken = this.signToken(user);
-    res.redirect(`http://localhost:3000/?accessToken=${accessToken}`);
+    return res.json({ accessToken });
   }
 
   async kakaoLogin(
@@ -79,17 +79,22 @@ export class AuthService {
       redirect_uri,
       code,
     };
+    console.log('config:', config);
     const params = new URLSearchParams(config).toString();
+    console.log('params:', params);
     const tokenHeaders = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     };
 
     try {
       // 토큰을 받아온다.
-      const tokenResponse = await firstValueFrom(
-        this.http.post(this.KAKAO_TOKEN_URL, params, { headers: tokenHeaders }),
-      );
+      const response = this.http.post(this.KAKAO_TOKEN_URL, params, {
+        headers: tokenHeaders,
+      });
+      console.log(response);
+      const tokenResponse = await firstValueFrom(response);
       const { access_token } = tokenResponse.data;
+      console.log('access_token:', access_token);
 
       // 받아온 토큰으로 사용자 정보를 가져온다.
       const userInfoHeaders = {
@@ -101,6 +106,8 @@ export class AuthService {
 
       const nickname = data.properties.nickname;
       const email = data.kakao_account.email;
+      console.log('email:', email);
+      console.log('nickname:', nickname);
       if (!email || !nickname) {
         throw new UnauthorizedException('사용자의 정보를 가져올 수 없습니다.');
       }

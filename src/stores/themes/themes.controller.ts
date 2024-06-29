@@ -90,4 +90,16 @@ export class ThemesController {
   async remove(@Param('themeId') id: string) {
     return await this.themesService.remove(id);
   }
+
+  @Get('suggest')
+  @ApiOperation({ summary: '지역, 장르, 난이도를 받아 3개의 테마 랜덤 반환' })
+  @ApiQuery({ name: 'region', description: '지역', required: true })
+  @ApiQuery({ name: 'genre', description: '장르', required: true })
+  @ApiQuery({ name: 'difficulty', description: '난이도', required: true })
+  @ApiResponse({ status: 200, description: '성공', type: [ThemesModel] })
+  async suggestThemes(
+    @Query() query: { region: string; genre: string; difficulty: string },
+  ) {
+    return await this.themesService.suggestThemes(query);
+  }
 }

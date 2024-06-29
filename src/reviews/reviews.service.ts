@@ -35,6 +35,10 @@ export class ReviewsService {
       },
       ...reviewDto,
     });
+    if (reviewDto.isSuccess === true) {
+      // 유저의 성공 횟수를 1 증가시킨다.
+      review.author.successCount += 1;
+    }
 
     const newReview = await this.reviewsRepository.save(review);
     return newReview;

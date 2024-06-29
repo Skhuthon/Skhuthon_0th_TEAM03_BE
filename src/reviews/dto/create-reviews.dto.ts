@@ -10,5 +10,11 @@ export class CreateReviewsDto extends PickType(ReviewsModel, [
   'totalThemeTime',
   'content',
 ]) {
-  email: string;
+  content: string;
+  totalThemeTime: number;
+  remainingTime: number;
+  numberOfHintsUsed: number;
+  numberOfPeople: number;
+  isSuccess: boolean;
+  themeName: string;
 }

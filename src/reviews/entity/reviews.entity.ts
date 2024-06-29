@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { BaseModel } from '../../common/entity/base.entity';
 import { UsersModel } from '../../users/entity/users.entity';
-import { IsNumber, IsString, Length } from 'class-validator';
+import { IsBoolean, IsNumber, IsString, Length } from 'class-validator';
 import { stringValidationMessage } from '../../common/validation-message/string-validation-message';
 import { numberValidationMessage } from '../../common/validation-message/number-validation-message';
 import { lengthValidationMessage } from '../../common/validation-message/length-validation-message';
@@ -42,6 +42,9 @@ export class ReviewsModel extends BaseModel {
     description: '성공 여부',
   })
   @Column()
+  @IsBoolean({
+    message: '성공 여부는 boolean 타입이어야 합니다.',
+  })
   isSuccess: boolean;
 
   @ApiProperty({

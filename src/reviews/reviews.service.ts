@@ -29,7 +29,7 @@ export class ReviewsService {
   }
 
   async createReview(authorId: number, reviewDto: CreateReviewsDto) {
-    const review = this.reviewsRepository.create({
+    const review = await this.reviewsRepository.create({
       author: {
         id: authorId,
       },
@@ -41,6 +41,7 @@ export class ReviewsService {
     }
 
     const newReview = await this.reviewsRepository.save(review);
+    console.log(newReview);
     return newReview;
   }
 

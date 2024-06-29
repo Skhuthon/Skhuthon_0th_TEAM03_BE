@@ -41,6 +41,7 @@ export class AuthController {
     const redirect_uri = this.configService.get<string>(
       ENV_KAKAO_REDIRECT_URL_KEY,
     );
+    console.log(`code: ${code}`);
     await this.authService.kakaoLogin(client_id, redirect_uri, code, res);
   }
 }

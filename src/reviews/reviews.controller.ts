@@ -31,7 +31,6 @@ export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @ApiOperation({ summary: '테마 리뷰 목록 조회' })
-  @ApiBearerAuth()
   @ApiResponse({ status: 200, description: '리뷰 목록 조회 성공' })
   @ApiResponse({ status: 401, description: '인증 실패' })
   @Get()
@@ -41,7 +40,6 @@ export class ReviewsController {
   }
 
   @ApiOperation({ summary: '테마 리뷰 작성하기' })
-  @ApiBearerAuth()
   @ApiBody({ type: CreateReviewsDto })
   @ApiResponse({ status: 201, description: '리뷰 작성 성공' })
   @ApiResponse({ status: 400, description: '잘못된 요청' })
@@ -53,7 +51,6 @@ export class ReviewsController {
   }
 
   @ApiOperation({ summary: '테마 리뷰 수정하기' })
-  @ApiBearerAuth()
   @ApiParam({ name: 'reviewId', required: true, description: '리뷰 ID' })
   @ApiBody({ type: UpdateReviewsDto })
   @ApiResponse({ status: 200, description: '리뷰 수정 성공' })

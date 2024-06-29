@@ -26,6 +26,7 @@ export class BearerTokenGuard implements CanActivate {
 
     const token = this.authService.extractTokenFromHeader(rawToken);
     const result = await this.authService.verifyToken(token);
+    console.log(`email: ${result.email}`);
     const user = await this.usersService.findUserByEmail(result.email);
     req.user = user;
     req.token = token;

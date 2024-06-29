@@ -62,12 +62,11 @@ export class AuthService {
     return this.usersService.createUser(createUserDto);
   }
 
-  // loginUser(user: Pick<UsersModel, 'email' | 'id'>, res: Response, nickname: string) {
-  //   const accessToken = this.signToken(user);
-  //   console.log('accessToken:', accessToken);
-  //   console.log('nickname:', nickname);
-  //   return { accessToken, nickname };
-  // }
+  loginUser(user: Pick<UsersModel, 'email' | 'id'>, res: Response, nickname: string) {
+    const accessToken = this.signToken(user);
+    console.log('accessToken:', accessToken);
+    return res.json({ accessToken, nickname });
+  }
 
   async kakaoLogin(
     client_id: string,
@@ -121,12 +120,10 @@ export class AuthService {
       // 사용자 정보가 없으면 회원가입
       if (!user) {
         user = await this.registerUser(email, nickname);
-        const accessToken = this.signToken(user);
-        return { accessToken, nickname };
+        return this.loginUser(user, res, nickname);
       }
       // 로그인
-      const accessToken = this.signToken(user);
-      return { accessToken, nickname };
+      return this.loginUser(user, res, nickname);
     } catch (e) {
       console.error('Error during Kakao login:', e);
       throw new UnauthorizedException('카카오 로그인 중 오류가 발생했습니다.');

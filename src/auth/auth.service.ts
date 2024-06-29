@@ -54,7 +54,7 @@ export class AuthService {
     });
   }
 
-  async registerUser(email: string, nickname: string) {
+  async registerUser(email: string, nickname: string, ) {
     const createUserDto = new CreateUserDto();
     createUserDto.email = email;
     createUserDto.nickname = nickname;
@@ -66,7 +66,11 @@ export class AuthService {
     return { accessToken };
   }
 
-  async kakaoLogin(client_id: string, redirect_uri: string, code: string) {
+  async kakaoLogin(
+    client_id: string,
+    redirect_uri: string,
+    code: string,
+  ) {
     const config = {
       grant_type: 'authorization_code',
       client_id,

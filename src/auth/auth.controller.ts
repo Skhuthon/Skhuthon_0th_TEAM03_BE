@@ -36,7 +36,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: '카카오 사용자 정보 조회 성공' })
   @ApiQuery({ name: 'code', required: true, description: '카카오 인증 코드' })
   @Get('kakao/redirect')
-  async getKakaoInfo(@Query('code') code: string) {
+  async getKakaoInfo(@Query('code') code: string,) {
     const client_id = this.configService.get<string>(ENV_KAKAO_CLIENT_ID_KEY);
     const redirect_uri = this.configService.get<string>(
       ENV_KAKAO_REDIRECT_URL_KEY,

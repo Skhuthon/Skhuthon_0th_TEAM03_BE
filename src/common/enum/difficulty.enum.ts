@@ -1,5 +1,5 @@
 export enum DifficultyEnum {
-  EASY = 'easy',
-  NORMAL = 'normal',
-  HARD = 'hard',
+  EASY = '쉬움',
+  NORMAL = '보통',
+  HARD = '어려움',
 }

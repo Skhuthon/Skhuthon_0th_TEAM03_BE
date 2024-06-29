@@ -86,9 +86,11 @@ export class ThemesService {
       .orderBy('theme.createdAt', dto.order__createdAt);
 
     const [themes, count] = await query.getManyAndCount();
+    const totalPages = Math.ceil(count / dto.take);
     return {
       data: themes,
       total: count,
+      totalPages,
     };
   }
 }

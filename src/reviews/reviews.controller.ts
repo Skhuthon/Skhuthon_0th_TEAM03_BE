@@ -35,7 +35,6 @@ export class ReviewsController {
   @ApiResponse({ status: 200, description: '리뷰 목록 조회 성공' })
   @ApiResponse({ status: 401, description: '인증 실패' })
   @Get()
-  @User()
   @UseGuards(AccessTokenGuard)
   async getReviews() {
     return await this.reviewsService.getReviews();

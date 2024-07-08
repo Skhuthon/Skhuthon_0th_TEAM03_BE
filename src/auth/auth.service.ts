@@ -74,27 +74,26 @@ export class AuthService {
     code: string,
     res: Response,
   ) {
-    const config = {
-      grant_type: 'authorization_code',
-      client_id,
-      redirect_uri,
-      code,
-    };
-    console.log('config:', config);
-    const params = new URLSearchParams(config).toString();
-    console.log('params:', params);
+    // const config = {
+    //   grant_type: 'authorization_code',
+    //   client_id,
+    //   redirect_uri,
+    //   code,
+    // };
+    // const params = new URLSearchParams(config).toString();
+    // console.log('params:', params);
     const tokenHeaders = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     };
 
     try {
-      // 토큰을 받아온다.
-      const response = this.http.post(this.KAKAO_TOKEN_URL, params, {
-        headers: tokenHeaders,
-      });
-      console.log(response);
-      const tokenResponse = await firstValueFrom(response);
-      const { access_token } = tokenResponse.data;
+      // https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=0ff9e937e20369b1d34a255f00178da2&redirect_uri=http://localhost:3000/auth/kakao/redirect&code=M-qfQEss2D4I3H26KbCA-CmXvCsNnD5wH-Tx0M-bUtvZBmBNzEQL-AAAAAQKPXTaAAABkGVjwP7OkqTnJF629A
+      const response = await firstValueFrom(
+        this.http.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${client_id}&redirect_uri=https://bangpro.vercel.app/auth/kakao/redirect&code=${code}`, {}, {
+          headers: tokenHeaders,
+        }),
+      );
+      const { access_token } = response.data;
       console.log('access_token:', access_token);
 
       // 받아온 토큰으로 사용자 정보를 가져온다.
@@ -102,7 +101,9 @@ export class AuthService {
         Authorization: `Bearer ${access_token}`,
       };
       const { data } = await firstValueFrom(
-        this.http.get(this.KAKAO_USER_INFO_URL, { headers: userInfoHeaders }),
+        this.http.get(`https://kapi.kakao.com/v2/user/me`, {
+          headers: userInfoHeaders,
+        }),
       );
 
       const nickname = data.properties.nickname;
